@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Culsight Phishing Simulator">
+  <meta name="author" content="Viir Phuria (https://github.com/Viir-Phuria)">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <title>Sending Profile | API Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- Left Sidebar -->
+  <div class="navbar-left">
+    <img src="images/Culsight.png" alt="Culsight Logo" height="50px">
+    <h2>API Documentation</h2>
+    <ul class="nav-links-left">
+      <li><a href="introduction.html">Introduction</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="sending-profiles.html">Sending Profiles</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="landing-pages.html">Landing Pages</a></li>
+      <li><a href="users-and-groups.html">Users & Groups</a></li>
+      <li><a href="campaigns.html">Campaigns</a></li>
+      <li><a href="user-management.html">User Management</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-container">
+    <!-- Right Sidebar (dynamic per page) -->
+    <div class="navbar-right">
+      <ul class="nav-links-right">
+        <li><a href="#get-sending-profiles">Get Sending Profiles</a></li>
+        <li><a href="#get-sending-profile">Get Sending Profile</a></li>
+        <li><a href="#create-sending-profile">Create Sending Profile</a></li>
+        <li><a href="#modify-sending-profile">Modify Sending Profile</a></li>
+        <li><a href="#delete-sending-profile">Delete Sending Profile</a></li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+      <h1 id="sending-profiles">Sending Profiles</h1>
+      <p>A "Sending Profile" is the SMTP configuration that tells Culsight - Phishing Simulation how
+        to send emails.</p>
+      <p>Sending profiles support authentication and ignoring invalid SSL
+        certificates.</p>
+      <p>Sending Profiles have the following structure:</p>
+      <pre class="text"><code>{
+  id                 : int64
+  name               : string
+  username           : string (optional)
+  password           : string (optional)
+  host               : string
+  interface_type     : string
+  from_address       : string
+  ignore_cert_errors : boolean (default:false)
+  modified_date      : string(datetime)
+  headers            : array({key: string, value: string}) (optional)
+}</code></pre>
+      <h2 id="get-sending-profiles">Get Sending Profiles</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost/api/smtp/</code>
+      </p>
+
+      <p>Gets a list of the sending profiles
+        created by the authenticated user.</p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sourceCode" id="cb2">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span> <span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;Example Profile&quot;</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;interface_type&quot;</span><span class="op">:</span><span class="st">&quot;SMTP&quot;</span><span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;from_address&quot;</span><span class="op">:</span><span class="st">&quot;John Doe &lt;john@example.com&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;host&quot;</span><span class="op">:</span><span class="st">&quot;smtp.example.com:25&quot;</span><span class="op">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;username&quot;</span><span class="op">:</span><span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;password&quot;</span><span class="op">:</span><span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ignore_cert_errors&quot;</span><span class="op">:</span><span class="kw">true</span><span class="op">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2016-11-20T14:47:51.4131367-06:00&quot;</span><span class="op">,</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;headers&quot;</span><span class="op">:</span> [</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;key&quot;</span><span class="op">:</span> <span class="st">&quot;X-Header&quot;</span><span class="op">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;value&quot;</span><span class="op">:</span> <span class="st">&quot;Foo Bar&quot;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>]</span></code></pre>
+      </div>
+      <h2 id="get-sending-profile">Get Sending Profile</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/smtp/:id</code>
+      </p>
+      <p>Returns a sending profile given an ID,
+        returning a 404 error if no sending profile with the provided ID is
+        found.</p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The sending profile ID to return</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sourceCode" id="cb3">
+        <strong>200</strong>
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span> <span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;Example Profile&quot;</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;interface_type&quot;</span><span class="op">:</span><span class="st">&quot;SMTP&quot;</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;from_address&quot;</span><span class="op">:</span><span class="st">&quot;John Doe &lt;john@example.com&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;host&quot;</span><span class="op">:</span><span class="st">&quot;smtp.example.com:25&quot;</span><span class="op">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;username&quot;</span><span class="op">:</span><span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;password&quot;</span><span class="op">:</span><span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;ignore_cert_errors&quot;</span><span class="op">:</span><span class="kw">true</span><span class="op">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2016-11-20T14:47:51.4131367-06:00&quot;</span><span class="op">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;headers&quot;</span><span class="op">:</span> [</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;key&quot;</span><span class="op">:</span> <span class="st">&quot;X-Header&quot;</span><span class="op">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;value&quot;</span><span class="op">:</span> <span class="st">&quot;Foo Bar&quot;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb4">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;SMTP not found&quot;</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <h2 id="create-sending-profile">Creates a sending profile</h2>
+      <p><strong>POST</strong>
+        <code>https://localhost:3333/api/smtp</code>
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>The body of the request is a JSON representation of a sending profile. Refer to the introduction for the
+              valid format of a sending profile.</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb5">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span> <span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;Example Profile&quot;</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;interface_type&quot;</span><span class="op">:</span><span class="st">&quot;SMTP&quot;</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;from_address&quot;</span><span class="op">:</span><span class="st">&quot;John Doe &lt;john@example.com&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;host&quot;</span><span class="op">:</span><span class="st">&quot;smtp.example.com:25&quot;</span><span class="op">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;username&quot;</span><span class="op">:</span><span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;password&quot;</span><span class="op">:</span><span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;ignore_cert_errors&quot;</span><span class="op">:</span><span class="kw">true</span><span class="op">,</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2016-11-20T14:47:51.4131367-06:00&quot;</span><span class="op">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;headers&quot;</span><span class="op">:</span> [</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;key&quot;</span><span class="op">:</span> <span class="st">&quot;X-Header&quot;</span><span class="op">,</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;value&quot;</span><span class="op">:</span> <span class="st">&quot;Foo Bar&quot;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>400 If required fields aren't
+        provided, or if a sending profile already exists with the provided name,
+        a 400: Bad Request error will be returned.</strong>
+      <div class="sourceCode" id="cb6">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Error message indicating the issue&quot;</span><span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>This method expects the sending profile to be provided in JSON
+        format. You must provide a sending profile <code>name</code>, the
+        <code>from_address</code> which emails are sent from, and the SMTP relay
+        <code>host</code>.
+      </p>
+      <p>Sending Profiles support authentication by setting the
+        <code>username</code> and <code>password</code>.
+      </p>
+      <p>Additionally, many SMTP server deployments leverage self-signed
+        certificates. To tell Culsight - Phishing Simulation to ignore these invalid certificates, set
+        the <code>ignore_cert_errors</code> field to <code>true</code>.</p>
+      <p>This method returns the JSON representation of the sending profile
+        that was created.</p>
+      <h2 id="modify-sending-profile">Modify Sending Profile</h2>
+      <p><strong>PUT</strong>
+        <code>https://localhost:3333/api/smtp/:id</code>
+      </p>
+      <p>Modifies an existing sending profile.</p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The sending profile ID to modify</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>The body of the request is a JSON representation of a sending profile. Refer to the introduction for the
+              valid format of a sending profile.</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb7">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span> <span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;Example Profile&quot;</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;interface_type&quot;</span><span class="op">:</span><span class="st">&quot;SMTP&quot;</span><span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;from_address&quot;</span><span class="op">:</span><span class="st">&quot;John Doe &lt;john@example.com&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;host&quot;</span><span class="op">:</span><span class="st">&quot;smtp.example.com:25&quot;</span><span class="op">,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;username&quot;</span><span class="op">:</span><span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;password&quot;</span><span class="op">:</span><span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;ignore_cert_errors&quot;</span><span class="op">:</span><span class="kw">true</span><span class="op">,</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2016-11-20T14:47:51.4131367-06:00&quot;</span><span class="op">,</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;headers&quot;</span><span class="op">:</span> [</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;key&quot;</span><span class="op">:</span> <span class="st">&quot;X-Header&quot;</span><span class="op">,</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;value&quot;</span><span class="op">:</span> <span class="st">&quot;Foo Bar&quot;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404 If no sending profile exists with the provided ID, a 404: Not Found error is returned.</strong>
+      <div class="sourceCode" id="cb8">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;SMTP not found&quot;</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>This method expects the sending profile to be provided in JSON
+        format. You must provide a full sending profile, not just the fields you
+        want to update.</p>
+      <p>This method returns the JSON representation of the sending profile
+        that was modified.</p>
+
+      <h2 id="delete-sending-profile">Delete Sending Profile</h2>
+      <p><strong>DELETE</strong>
+        <code>https://localhost:3333/api/smtp/:id</code>
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The ID of the sending profile to delete</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb9">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;SMTP deleted successfully!&quot;</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p><strong>404</strong></p>
+      <div class="sourceCode" id="cb10">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;SMTP not found&quot;</span><span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if the specified sending profile isn't found.</p>
+      <p>This method returns a status message indicating the sending profile
+        was deleted successfully.</p>
+    </div>
+  </div>
+</body>
+
+</html>

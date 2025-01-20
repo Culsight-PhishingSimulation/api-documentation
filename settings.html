@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Culsight Phishing Simulator">
+    <meta name="author" content="Viir Phuria (https://github.com/Viir-Phuria)">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <title>Settings | API Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Left Sidebar -->
+    <div class="navbar-left">
+        <img src="images/Culsight.png" alt="Culsight Logo" height="50px">
+        <h2>API Documentation</h2>
+        <ul class="nav-links-left">
+            <li><a href="introduction.html">Introduction</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="sending-profiles.html">Sending Profiles</a></li>
+            <li><a href="templates.html">Templates</a></li>
+            <li><a href="landing-pages.html">Landing Pages</a></li>
+            <li><a href="users-and-groups.html">Users & Groups</a></li>
+            <li><a href="campaigns.html">Campaigns</a></li>
+            <li><a href="user-management.html">User Management</a></li>
+        </ul>
+    </div>
+    <!-- Main Content Area -->
+    <div class="main-container">
+        <!-- Content -->
+        <div class="container">
+        <h1 id="settings">Settings</h1>
+
+        <p><strong>These endpoints allow you to modify various Culsight - Phishing Simulation settings.</strong></p>
+
+        <h2>Reset API Key</h2>
+        <p><strong>POST</strong>
+        <code>https://localhost:3333/api/reset</code></p>
+
+        <p><strong>Endpoint Description:</strong></p>
+        <p>This endpoint allows you to reset your API key to a new, randomly generated key.</p>
+
+        <p><strong>Authentication:</strong></p>
+        <p>This method requires you to authenticate using your existing API key.</p>
+
+        <h3>Headers</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Authorization</td>
+                    <td>string</td>
+                    <td>The existing API key.</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+
+        <p> 200 OK API key successfully reset. The new API key is provided in the <code>data</code> response parameter.</p>
+
+        <div class="sourceCode" id="cb1">
+            <pre class="sourceCode javascript">
+                <code class="sourceCode javascript">
+                    {
+                        "success": true,
+                        "message": "API Key successfully reset!",
+                        "data": "0123456789abcdef"
+                    }
+                </code>
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

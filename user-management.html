@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Culsight Phishing Simulator" />
+  <meta name="author" content="Viir Phuria (https://github.com/Viir-Phuria)" />
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <title>Sending Profile | API Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Left Sidebar -->
+  <div class="navbar-left">
+    <img src="images/Culsight.png" alt="Culsight Logo" height="50px" />
+    <h2>API Documentation</h2>
+    <ul class="nav-links-left">
+      <li><a href="introduction.html">Introduction</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="sending-profiles.html">Sending Profiles</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="landing-pages.html">Landing Pages</a></li>
+      <li><a href="users-and-groups.html">Users & Groups</a></li>
+      <li><a href="campaigns.html">Campaigns</a></li>
+      <li><a href="user-management.html">User Management</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-container">
+    <!-- Right Sidebar (dynamic per page) -->
+    <div class="navbar-right">
+      <ul class="nav-links-right">
+        <li><a href="#get-users">Get Users</a></li>
+        <li><a href="#get-user">Get User</a></li>
+        <li><a href="#create-user">Create User</a></li>
+        <li><a href="#modify-user">Modify User</a></li>
+        <li><a href="#delete-user">Delete User</a></li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+      <h1 id="user-management">User Management</h1>
+      <p>
+        Culsight - Phishing Simulation supports having multiple user accounts. Each of these accounts
+        are separate, with their own campaigns, landing pages, templates, etc.
+      </p>
+      <p>
+        Each user account in Culsight - Phishing Simulation is assigned a <strong>role</strong>.
+        These are global roles that describe the user's permissions within
+        Culsight - Phishing Simulation.
+      </p>
+      <p>At the time of this writing, there are two roles:</p>
+      <table>
+        <thead>
+          <tr class="header">
+            <th style="text-align: left">Role</th>
+            <th style="text-align: left">Slug</th>
+            <th style="text-align: left"><strong>Description</strong></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="odd">
+            <td style="text-align: left">User</td>
+            <td style="text-align: left"><code>user</code></td>
+            <td style="text-align: left">
+              A non-administrative user role. Users with this role can create
+              objects and launch campaigns.
+            </td>
+          </tr>
+          <tr class="even">
+            <td style="text-align: left">Admin</td>
+            <td style="text-align: left"><code>admin</code></td>
+            <td style="text-align: left">
+              An administrative user. Users with this role can manage
+              system-wide settings as well as other user accounts within
+              Culsight - Phishing Simulation.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Users have the following format:</p>
+      <pre class="text"><code>{
+    id              : int64
+    username        : string
+    role            : Role
+    modified_date   : string(datetime)
+}</code></pre>
+      <p>Each Role has the following format:</p>
+      <pre class="text"><code>{
+    name            : string
+    slug            : string
+    description     : string
+}</code></pre>
+      <h2 id="get-users">Get Users</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/users/</code></p>
+        <p>Returns a list of all user accounts in Culsight - Phishing Simulation.</p>
+        <h3>Headers</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Authorization</td>
+              <td>string</td>
+              <td>A valid API key</td>
+            </tr>
+          </tbody>
+        </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb3">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;username&quot;</span><span class="op">:</span> <span class="st">&quot;admin&quot;</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;role&quot;</span><span class="op">:</span> {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;slug&quot;</span><span class="op">:</span> <span class="st">&quot;admin&quot;</span><span class="op">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Admin&quot;</span><span class="op">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;description&quot;</span><span class="op">:</span> <span class="st">&quot;System administrator with full permissions&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>]</span></code></pre>
+      </div>
+      <h2 id="get-user">Get User</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/users/:id</code></p>
+      <p>
+        Returns a user with the given ID.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The user ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb4">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;username&quot;</span><span class="op">:</span> <span class="st">&quot;admin&quot;</span><span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;role&quot;</span><span class="op">:</span> {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;slug&quot;</span><span class="op">:</span> <span class="st">&quot;admin&quot;</span><span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Admin&quot;</span><span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;description&quot;</span><span class="op">:</span> <span class="st">&quot;System administrator with full permissions&quot;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>]</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb5">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;User not found&quot;</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <h2 id="create-user">Create User</h2>
+      <p><strong>POST</strong>
+        <code>https://localhost:3333/api/users/</code></p>
+      <p>
+        Creates a new user.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>role</td>
+            <td>string</td>
+            <td>The role slug to use for the account</td>
+          </tr>
+          <tr>
+            <td>password</td>
+            <td>string</td>
+            <td>The password to set for the account</td>
+          </tr>
+          <tr>
+            <td>username</td>
+            <td>string</td>
+            <td>The username for the account</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb6">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;username&quot;</span><span class="op">:</span> <span class="st">&quot;exampleuser&quot;</span><span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;role&quot;</span><span class="op">:</span> {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;slug&quot;</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;description&quot;</span><span class="op">:</span> <span class="st">&quot;User role with edit access to objects and campaigns&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>400 If an invalid request is provided, an error will be returned with the following format</strong>
+      <div class="sourceCode" id="cb7">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Username already taken&quot;</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <h2 id="modify-user">Modify User</h2>
+      <p><strong>PUT</strong>
+        <code>https://localhost:3333/api/users/:id</code></p>
+      <p>
+        Modifies a user account. This can be used
+        to change the role, reset the password, or change the username.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>string</td>
+            <td>The user ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>role</td>
+            <td>string</td>
+            <td>The role slug to use for the account</td>
+          </tr>
+          <tr>
+            <td>password</td>
+            <td>string</td>
+            <td>The password to set for the account</td>
+          </tr>
+          <tr>
+            <td>username</td>
+            <td>string</td>
+            <td>The username for the account</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb8">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;username&quot;</span><span class="op">:</span> <span class="st">&quot;exampleuser&quot;</span><span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;role&quot;</span><span class="op">:</span> {</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;slug&quot;</span><span class="op">:</span> <span class="st">&quot;user&quot;</span><span class="op">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;description&quot;</span><span class="op">:</span> <span class="st">&quot;User role with edit access to objects and campaigns&quot;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>400 If an invalid request is provided, an error will be returned in the following format</strong>
+      <div class="sourceCode" id="cb9">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Username already taken&quot;</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb10">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;User not found&quot;</span><span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>
+        <h2 id="delete-user">Delete User</h2>
+        <p><strong>DELETE</strong>
+          <code>https://localhost:3333/api/users/:id</code></p>
+      <p>
+        Deletes a user, as well as every object
+        (landing page, template, etc.) and campaign they've created.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>string</td>
+            <td>The user ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb11">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;User deleted Successfully!&quot;</span><span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb12">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;User not found&quot;</span><span class="op">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if no user is found with the provided ID.</p>
+    </div>
+  </div>
+</body>
+
+</html>

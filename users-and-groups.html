@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Culsight Phishing Simulator" />
+  <meta name="author" content="Viir Phuria (https://github.com/Viir-Phuria)" />
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <title>Sending Profile | API Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Left Sidebar -->
+  <div class="navbar-left">
+    <img src="images/Culsight.png" alt="Culsight Logo" height="50px" />
+    <h2>API Documentation</h2>
+    <ul class="nav-links-left">
+      <li><a href="introduction.html">Introduction</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="sending-profiles.html">Sending Profiles</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="landing-pages.html">Landing Pages</a></li>
+      <li><a href="users-and-groups.html">Users & Groups</a></li>
+      <li><a href="campaigns.html">Campaigns</a></li>
+      <li><a href="user-management.html">User Management</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-container">
+    <!-- Right Sidebar (dynamic per page) -->
+    <div class="navbar-right">
+      <ul class="nav-links-right">
+        <li><a href="#get-groups">Get Groups</a></li>
+        <li><a href="#get-group">Get Group</a></li>
+        <li><a href="#get-groups-summary">Get Groups Summary</a></li>
+        <li><a href="#get-group-summary">Get Group Summary</a></li>
+        <li><a href="#create-group">Create Group</a></li>
+        <li><a href="#modify-group">Modify Group</a></li>
+        <li><a href="#delete-group">Delete Group</a></li>
+        <li><a href="#import-group">Import Group</a></li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+      <h1 id="users--groups">Users &amp; Groups</h1>
+      <p>
+        Culsight - Phishing Simulation manages recipients for campaigns in groups. Each group can
+        contain one or more recipients. Groups have the following format:
+      </p>
+      <pre class="text"><code>{
+    id              : int64
+    name            : string
+    targets         : array(Target)
+    modified_date   : string(datetime)
+}</code></pre>
+      <p>
+        Each recipient in the <code>targets</code> field has the following
+        format:
+      </p>
+      <pre class="text"><code>{
+    email           : string
+    first_name      : string
+    last_name       : string
+    position        : string
+}</code></pre>
+      <h2 id="get-groups">Get Groups</h2>
+      <p><strong>POST</strong>
+        <code>https://localhost:3333/api/import/group</code>
+      </p>
+      <p>
+        Returns a list of groups.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>File</td>
+            <td>object</td>
+            <td>A file upload containing the CSV content to parse.</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb3">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Group&quot;</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:13.790016Z&quot;</span><span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;targets&quot;</span><span class="op">:</span> [</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>]</span></code></pre>
+      </div>
+      <h2 id="get-group">Get Group</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/groups/:id</code>
+      <p>
+        Returns a group with the given ID.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The group ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb4">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Group&quot;</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:13.790016Z&quot;</span><span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;targets&quot;</span><span class="op">:</span> [</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p><strong>404</strong></p>
+      <div class="sourceCode" id="cb5">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Group not found&quot;</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if no group is found with the provided ID.</p>
+      <h2 id="get-groups-summary">Get Groups Summary</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/groups/summary</code>
+      <p>
+        Returns a summary of each group.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb6">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Group&quot;</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:13.790016Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;num_targets&quot;</span><span class="op">:</span> <span class="dv">2</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>]</span></code></pre>
+      </div>
+      <h2 id="get-group-summary">Get Group Summary</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/groups/:id/summary</code>
+      <p>
+        Returns a summary for a group.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The group ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb7">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Group&quot;</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:13.790016Z&quot;</span><span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;num_targets&quot;</span><span class="op">:</span> <span class="dv">2</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>400</strong>
+      <div class="sourceCode" id="cb8">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Group not found&quot;</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>
+        It may be the case that you just want the number of members in a
+        group, not necessarily the full member details. This API endpoint
+        returns a summary for a group.
+      </p>
+      <p>Returns a 404 error if no group is found with the provided ID.</p>
+      <h2 id="create-group">Create Group</h2>
+      <p><strong>POST</strong>
+        <code>https://localhost:3333/api/groups/</code>
+      <p>
+        Creates a new group.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>The group to create in JSON format.</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>201</strong>
+      <div class="sourceCode" id="cb9">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Group&quot;</span><span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:13.790016Z&quot;</span><span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;targets&quot;</span><span class="op">:</span> [</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>400 If an invalid request is provided, an error message will be returned</strong>
+      <pre><code>{
+  &quot;message&quot;: &quot;Group name not specified&quot;,
+  &quot;success&quot;: false,
+  &quot;data&quot;: null
+}</code></pre>
+      <p>
+        When creating a new group, you must specify a unique
+        <code>name</code>, as well as a list of <code>targets</code>. Here's
+        an example request body:
+      </p>
+      <div class="sourceCode" id="cb11">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Group&quot;</span><span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;targets&quot;</span><span class="op">:</span> [</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <h2 id="modify-group">Modify Group</h2>
+      <p><strong>PUT</strong>
+        <code>https://localhost:3333/api/groups/:id</code>
+      <p>
+        Modifies a group.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The group ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>The updated group content. The full group must be provided in JSON format.</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb12">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Modified Group&quot;</span><span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:13.790016Z&quot;</span><span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;targets&quot;</span><span class="op">:</span> [</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>400</strong>
+      <div class="sourceCode" id="cb13">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Group not found&quot;</span><span class="op">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>
+        This API endpoint allows you to modify an existing group. The request
+        must include the complete group JSON, not just the fields you're
+        wanting to update. This means that you need to include the matching
+        <code>id</code> field. Here's an example request:
+      </p>
+      <div class="sourceCode" id="cb14">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Modified Go&quot;</span><span class="op">,</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;targets&quot;</span><span class="op">:</span> [</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 if no group is found with the provided ID.</p>
+      <h2 id="delete-group">Delete Group</h2>
+      <p><strong>DELETE</strong>
+        <code>https://localhost:3333/api/groups/:id</code>
+      <p>
+        Deletes a group
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The group ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb15">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Group deleted successfully!&quot;</span><span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb16">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Group not found&quot;</span><span class="op">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if no group is found with the provided ID.</p>
+      <h2 id="import-group">Import Group</h2>
+      <p><strong>POST</strong>
+        <code>https://localhost:3333/api/import/group</code>
+      <p>
+        Reads and parses a CSV, returning data
+        that can be used to create a group.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>A file upload containing the CSV content to parse.</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb17">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foobar@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;Systems Administrator&quot;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;johndoe@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;John&quot;</span><span class="op">,</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Doe&quot;</span><span class="op">,</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;CEO&quot;</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>]</span></code></pre>
+      </div>
+      <p>
+        This API endpoint allows you to upload a CSV, returning a list of
+        group targets. For example, you can use the following
+        <code>curl</code> command to upload the CSV:
+      </p>
+      <pre class="text"><code>curl -k https://localhost:3333/api/import/group -XPOST \
+    -F &quot;file=@group_template.csv&quot; \
+    -H &quot;Authorization: Bearer 0123456789abcdef&quot;</code></pre>
+      <p>
+        The results of this API endpoint can be used as the
+        <code>targets</code> parameter in a call to the
+        <a href="users-and-groups.html#create-group">Create Group</a> endpoint.
+      </p>
+    </div>
+  </div>
+</body>
+
+</html>

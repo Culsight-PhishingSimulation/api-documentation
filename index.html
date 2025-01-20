@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Culsight Phishing Simulator">
+    <meta name="author" content="Viir Phuria (https://github.com/Viir-Phuria)">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <title>Introduction | API Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Left Sidebar -->
+    <div class="navbar-left">
+        <img src="images/Culsight.png" alt="Culsight Logo" height="50px">
+        <h2>API Documentation</h2>
+        <ul class="nav-links-left">
+            <li><a href="introduction.html">Introduction</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="sending-profiles.html">Sending Profiles</a></li>
+            <li><a href="templates.html">Templates</a></li>
+            <li><a href="landing-pages.html">Landing Pages</a></li>
+            <li><a href="users-and-groups.html">Users & Groups</a></li>
+            <li><a href="campaigns.html">Campaigns</a></li>
+            <li><a href="user-management.html">User Management</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-container">
+        <!-- Right Sidebar (dynamic per page) -->
+        <div class="navbar-right">
+            <ul class="nav-links-right">
+                <li><a href="#use-cases">Use Cases</a></li>
+                <li><a href="#authorization">Authorization</a></li>
+                <li><a href="#responses">Responses</a></li>
+                <li><a href="#status-codes">Status Codes</a></li>
+            </ul>
+        </div>
+
+        <!-- Content -->
+        <div class="container">
+            <h1 id="introduction">Introduction</h1>
+            <p>Culsight - Phishing Simulation was built from the ground-up with a JSON API that makes it
+                easy for developers and sysadmins to automate simulated phishing
+                campaigns.</p>
+            <p>These docs describe how to use the <a href="https://getCulsight - Phishing Simulation.com">Culsight - Phishing Simulation</a> API. We hope you enjoy
+                these
+                docs, and please don’t hesitate to <a href="https://github.com/Culsight - Phishing Simulation/Culsight - Phishing Simulation/issues/new">file an
+                    issue</a>
+                if you see anything missing.</p>
+            <p class="hint"> <strong>Is Python your language of
+                    choice?</strong> If so, we have a <a
+                    href="https://docs.getCulsight - Phishing Simulation.com/python-api-client/">fully-supported
+                    Python API client</a> that makes working with the Culsight - Phishing Simulation API a piece of
+                cake!</p>
+            <h2 id="use-cases">Use Cases</h2>
+            <p>There are many reasons to use the Culsight - Phishing Simulation API. The most common use
+                case is to gather report information for a given campaign, so that you
+                can build custom reports in software you’re most familiar with, such as
+                Excel or Numbers.</p>
+            <p>However, automating the creation of campaigns and campaign attributes
+                such as templates, landing pages, and more provides the ability to
+                create a fully automated phishing simulation program. This would allow
+                campaigns to be run throughout the year automatically. This also allows
+                the Culsight - Phishing Simulation administrator to be included in the campaigns, since they
+                wouldn’t know exactly which day it would start!</p>
+            <h2 id="authorization">Authorization</h2>
+            <p>All API requests require the use of a generated API key. You can find
+                your API key, or generate a new one, by navigating to the /settings
+                endpoint, or clicking the “Settings” sidebar item.</p>
+            <p>To authenticate an API request, you should provide your API key in
+                the <code>Authorization</code> header.</p>
+            <p>Alternatively, you may append the <code>api_key=[API_KEY]</code> as a
+                GET parameter to authorize yourself to the API. But note that this is
+                likely to leave traces in things like your history, if accessing the API
+                through a browser.</p>
+            <pre class="http"><code>GET /api/campaigns/?api_key=12345678901234567890123456789012</code></pre>
+            <table>
+                <thead>
+                    <tr class="header">
+                        <th style="text-align: left;">Parameter</th>
+                        <th style="text-align: left;">Type</th>
+                        <th style="text-align: left;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="odd">
+                        <td style="text-align: left;"><code>api_key</code></td>
+                        <td style="text-align: left;"><code>string</code></td>
+                        <td style="text-align: left;"><strong>Required</strong>. Your Culsight - Phishing Simulation
+                            API key</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 id="responses">Responses</h2>
+            <p>Many API endpoints return the JSON representation of the resources
+                created or edited. However, if an invalid request is submitted, or some
+                other error occurs, Culsight - Phishing Simulation returns a JSON response in the following
+                format:</p>
+            <div class="sourceCode" id="cb2">
+                <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span> <span class="op">:</span> string<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span> <span class="op">:</span> bool<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span>    <span class="op">:</span> string</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+            </div>
+            <p>The <code>message</code> attribute contains a message commonly used
+                to indicate errors or, in the case of deleting a resource, success that
+                the resource was properly deleted.</p>
+            <p>The <code>success</code> attribute describes if the transaction was
+                successful or not.</p>
+            <p>The <code>data</code> attribute contains any other metadata
+                associated with the response. This will be an escaped string containing
+                JSON data.</p>
+            <h2 id="status-codes">Status Codes</h2>
+            <p>Culsight - Phishing Simulation returns the following status codes in its API:</p>
+            <table>
+                <thead>
+                    <tr class="header">
+                        <th style="text-align: left;">Status Code</th>
+                        <th style="text-align: left;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="odd">
+                        <td style="text-align: left;">200</td>
+                        <td style="text-align: left;"><code>OK</code></td>
+                    </tr>
+                    <tr class="even">
+                        <td style="text-align: left;">201</td>
+                        <td style="text-align: left;"><code>CREATED</code></td>
+                    </tr>
+                    <tr class="odd">
+                        <td style="text-align: left;">400</td>
+                        <td style="text-align: left;"><code>BAD REQUEST</code></td>
+                    </tr>
+                    <tr class="even">
+                        <td style="text-align: left;">404</td>
+                        <td style="text-align: left;"><code>NOT FOUND</code></td>
+                    </tr>
+                    <tr class="odd">
+                        <td style="text-align: left;">500</td>
+                        <td style="text-align: left;"><code>INTERNAL SERVER ERROR</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

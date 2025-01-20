@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Culsight Phishing Simulator" />
+  <meta name="author" content="Viir Phuria (https://github.com/Viir-Phuria)" />
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <title>Sending Profile | API Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Left Sidebar -->
+  <div class="navbar-left">
+    <img src="images/Culsight.png" alt="Culsight Logo" height="50px" />
+    <h2>API Documentation</h2>
+    <ul class="nav-links-left">
+      <li><a href="introduction.html">Introduction</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="sending-profiles.html">Sending Profiles</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="landing-pages.html">Landing Pages</a></li>
+      <li><a href="users-and-groups.html">Users & Groups</a></li>
+      <li><a href="campaigns.html">Campaigns</a></li>
+      <li><a href="user-management.html">User Management</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-container">
+    <!-- Right Sidebar (dynamic per page) -->
+    <div class="navbar-right">
+      <ul class="nav-links-right">
+        <li><a href="#campaign-events">Campaign Events</a></li>
+        <li><a href="#campaign-results">Campaign Results</a></li>
+        <li><a href="#get-campaigns">Get Campaigns</a></li>
+        <li><a href="#get-campaign">Get Campaign</a></li>
+        <li><a href="#create-campaign">Create Campaign</a></li>
+        <li><a href="#scheduling-campaign">Scheduling a Campaign</a></li>
+        <li><a href="#spreading-out-emails">Spreading out Emails</a></li>
+        <li><a href="#get-campaign-results">Get Campaign Results</a></li>
+        <li><a href="#get-campaign-summary">Get Campaign Summary</a></li>
+        <li><a href="#delete-campaign">Delete Campaign</a></li>
+        <li><a href="#complete-campaign">Complete Campaign</a></li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+      <h1 id="campaigns">Campaigns</h1>
+      <p>Campaigns have the following structure:</p>
+      <pre class="text"><code>{
+  id                  : int64
+  name                : string
+  created_date        : string(datetime)
+  launch_date         : string(datetime)
+  send_by_date        : string(datetime)
+  completed_date      : string(datetime)
+  template            : Template
+  page                : Page
+  status              : string
+  results             : []Result
+  groups              : []Group
+  timeline            : []Event
+  smtp                : SMTP
+  url                 : string
+}</code></pre>
+      <p>
+        The <code>template</code>, <code>page</code>, <code>groups</code>, and
+        <code>smtp</code> objects are all Culsight - Phishing Simulation objects. Their format can be
+        found at their various API endpoints.
+      </p>
+      <h2 id="campaign-events">Campaign Events</h2>
+      <p>
+        Culsight - Phishing Simulation keeps track of every event for a campaign in it's
+        <code>timeline</code>. Each event has the following format:
+      </p>
+      <pre class="text"><code>{
+  email                : string
+  time                 : string(datetime)
+  message              : string
+  details              : string(JSON)
+}</code></pre>
+      <p>
+        The <code>details</code> field is a string containing JSON which
+        contains the raw data about an event (such as credentials that were
+        submitted, user-agent information, and more). The
+        <code>details</code> field has the following format:
+      </p>
+      <pre class="text"><code>{
+  payload              : object
+  browser              : object
+}</code></pre>
+      <h2 id="campaign-results">Campaign Results</h2>
+      <p>
+        In addition to this, campaign results are maintained in the
+        <code>results</code> attribute. This has a format similar to the
+        members of a <code>Group</code>, in that they have the following
+        structure:
+      </p>
+      <pre class="text"><code>{
+  id                   : int64
+  first_name           : string
+  last_name            : string
+  position             : string
+  status               : string
+  ip                   : string
+  latitude             : float
+  longitude            : float
+  send_date            : string(datetime)
+  reported             : boolean
+}</code></pre>
+      <h2 id="get-campaigns">Get Campaigns</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/campaigns/</code>
+      </p>
+      <p>
+        Returns a list of campaigns.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb5">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Campaign&quot;</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;created_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.48815Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;launch_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;send_by_date&quot;</span><span class="op">:</span> <span class="st">&quot;0001-01-01T00:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;completed_date&quot;</span><span class="op">:</span> <span class="st">&quot;0001-01-01T00:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;template&quot;</span><span class="op">:</span> {</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Template&quot;</span><span class="op">,</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;subject&quot;</span><span class="op">:</span> <span class="st">&quot;Click here!&quot;</span><span class="op">,</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;text&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;</span><span class="sc">\u003c</span><span class="st">html</span><span class="sc">\u003e\n\u003c</span><span class="st">head</span><span class="sc">\u003e\n\t\u003c</span><span class="st">title</span><span class="sc">\u003e\u003c</span><span class="st">/title</span><span class="sc">\u003e\n\u003c</span><span class="st">/head</span><span class="sc">\u003e\n\u003c</span><span class="st">body</span><span class="sc">\u003e\n\u003c</span><span class="st">p</span><span class="sc">\u003e</span><span class="st">Click </span><span class="sc">\u003c</span><span class="st">a href=</span><span class="sc">\&quot;</span><span class="st">{{.URL}}</span><span class="sc">\&quot;\u003e</span><span class="st">here</span><span class="sc">\u003c</span><span class="st">/a</span><span class="sc">\u003e</span><span class="st">!</span><span class="sc">\u003c</span><span class="st">/p</span><span class="sc">\u003e\n</span><span class="st">{{.Tracker}}</span><span class="sc">\u003c</span><span class="st">/body</span><span class="sc">\u003e\n\u003c</span><span class="st">/html</span><span class="sc">\u003e\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:54:56.258392Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;attachments&quot;</span><span class="op">:</span> []</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;page&quot;</span><span class="op">:</span> {</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Landing Page&quot;</span><span class="op">,</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;</span><span class="sc">\u003c</span><span class="st">html</span><span class="sc">\u003e\u003c</span><span class="st">head</span><span class="sc">\u003e\n\t\u003c</span><span class="st">title</span><span class="sc">\u003e\u003c</span><span class="st">/title</span><span class="sc">\u003e\n\u003c</span><span class="st">/head</span><span class="sc">\u003e\n\u003c</span><span class="st">body</span><span class="sc">\u003e\n\u003c</span><span class="st">p</span><span class="sc">\u003e</span><span class="st">Landing page HTML</span><span class="sc">\u003c</span><span class="st">/p</span><span class="sc">\u003e\n\n\n\u003c</span><span class="st">/body</span><span class="sc">\u003e\u003c</span><span class="st">/html</span><span class="sc">\u003e</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;capture_credentials&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;capture_passwords&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;redirect_url&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:55:16.416396Z&quot;</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;In progress&quot;</span><span class="op">,</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;results&quot;</span><span class="op">:</span> [</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="st">&quot;hoqKYFn&quot;</span><span class="op">,</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;ip&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;latitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;longitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;send_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;reported&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="st">&quot;VYrDwtG&quot;</span><span class="op">,</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;Clicked Link&quot;</span><span class="op">,</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;ip&quot;</span><span class="op">:</span> <span class="st">&quot;::1&quot;</span><span class="op">,</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;latitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;longitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;send_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.548722Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;reported&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:46.955281Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">,</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;timeline&quot;</span><span class="op">:</span> [</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.49172Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign Created&quot;</span><span class="op">,</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.548722Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:44.679743Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Opened&quot;</span><span class="op">,</span></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;{</span><span class="sc">\&quot;</span><span class="st">payload</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">rid</span><span class="sc">\&quot;</span><span class="st">:[</span><span class="sc">\&quot;</span><span class="st">VYrDwtG</span><span class="sc">\&quot;</span><span class="st">]},</span><span class="sc">\&quot;</span><span class="st">browser</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">address</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">::1</span><span class="sc">\&quot;</span><span class="st">,</span><span class="sc">\&quot;</span><span class="st">user-agent</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36</span><span class="sc">\&quot;</span><span class="st">}}&quot;</span></span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:46.955281Z&quot;</span><span class="op">,</span></span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Clicked Link&quot;</span><span class="op">,</span></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;{</span><span class="sc">\&quot;</span><span class="st">payload</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">rid</span><span class="sc">\&quot;</span><span class="st">:[</span><span class="sc">\&quot;</span><span class="st">VYrDwtG</span><span class="sc">\&quot;</span><span class="st">]},</span><span class="sc">\&quot;</span><span class="st">browser</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">address</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">::1</span><span class="sc">\&quot;</span><span class="st">,</span><span class="sc">\&quot;</span><span class="st">user-agent</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36</span><span class="sc">\&quot;</span><span class="st">}}&quot;</span></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">,</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;smtp&quot;</span><span class="op">:</span> {</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;interface_type&quot;</span><span class="op">:</span> <span class="st">&quot;SMTP&quot;</span><span class="op">,</span></span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Sending Profile&quot;</span><span class="op">,</span></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;host&quot;</span><span class="op">:</span> <span class="st">&quot;localhost:1025&quot;</span><span class="op">,</span></span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;from_address&quot;</span><span class="op">:</span> <span class="st">&quot;Test User </span><span class="sc">\u003c</span><span class="st">test@test.com</span><span class="sc">\u003e</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ignore_cert_errors&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;headers&quot;</span><span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-09-04T01:24:21.691924069Z&quot;</span></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;url&quot;</span><span class="op">:</span> <span class="st">&quot;http://localhost&quot;</span></span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>]</span></code></pre>
+      </div>
+      <h2 id="get-campaign">Get Campaign</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/campaigns/:id</code>
+      </p>
+      <p>
+        Returns a campaign given an ID.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The campaign ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb6">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Campaign&quot;</span><span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;created_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.48815Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;launch_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;send_by_date&quot;</span><span class="op">:</span> <span class="st">&quot;0001-01-01T00:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;completed_date&quot;</span><span class="op">:</span> <span class="st">&quot;0001-01-01T00:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;template&quot;</span><span class="op">:</span> {</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Template&quot;</span><span class="op">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;subject&quot;</span><span class="op">:</span> <span class="st">&quot;Click here!&quot;</span><span class="op">,</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;text&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;</span><span class="sc">\u003c</span><span class="st">html</span><span class="sc">\u003e\n\u003c</span><span class="st">head</span><span class="sc">\u003e\n\t\u003c</span><span class="st">title</span><span class="sc">\u003e\u003c</span><span class="st">/title</span><span class="sc">\u003e\n\u003c</span><span class="st">/head</span><span class="sc">\u003e\n\u003c</span><span class="st">body</span><span class="sc">\u003e\n\u003c</span><span class="st">p</span><span class="sc">\u003e</span><span class="st">Click </span><span class="sc">\u003c</span><span class="st">a href=</span><span class="sc">\&quot;</span><span class="st">{{.URL}}</span><span class="sc">\&quot;\u003e</span><span class="st">here</span><span class="sc">\u003c</span><span class="st">/a</span><span class="sc">\u003e</span><span class="st">!</span><span class="sc">\u003c</span><span class="st">/p</span><span class="sc">\u003e\n</span><span class="st">{{.Tracker}}</span><span class="sc">\u003c</span><span class="st">/body</span><span class="sc">\u003e\n\u003c</span><span class="st">/html</span><span class="sc">\u003e\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:54:56.258392Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;attachments&quot;</span><span class="op">:</span> []</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;page&quot;</span><span class="op">:</span> {</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Landing Page&quot;</span><span class="op">,</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;</span><span class="sc">\u003c</span><span class="st">html</span><span class="sc">\u003e\u003c</span><span class="st">head</span><span class="sc">\u003e\n\t\u003c</span><span class="st">title</span><span class="sc">\u003e\u003c</span><span class="st">/title</span><span class="sc">\u003e\n\u003c</span><span class="st">/head</span><span class="sc">\u003e\n\u003c</span><span class="st">body</span><span class="sc">\u003e\n\u003c</span><span class="st">p</span><span class="sc">\u003e</span><span class="st">Landing page HTML</span><span class="sc">\u003c</span><span class="st">/p</span><span class="sc">\u003e\n\n\n\u003c</span><span class="st">/body</span><span class="sc">\u003e\u003c</span><span class="st">/html</span><span class="sc">\u003e</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;capture_credentials&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;capture_passwords&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;redirect_url&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:55:16.416396Z&quot;</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;In progress&quot;</span><span class="op">,</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;results&quot;</span><span class="op">:</span> [</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="st">&quot;hoqKYFn&quot;</span><span class="op">,</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ip&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;latitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;longitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;send_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;reported&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="st">&quot;VYrDwtG&quot;</span><span class="op">,</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;Clicked Link&quot;</span><span class="op">,</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ip&quot;</span><span class="op">:</span> <span class="st">&quot;::1&quot;</span><span class="op">,</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;latitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;longitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;send_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.548722Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;reported&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:46.955281Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;timeline&quot;</span><span class="op">:</span> [</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.49172Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign Created&quot;</span><span class="op">,</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.548722Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:44.679743Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Opened&quot;</span><span class="op">,</span></span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;{</span><span class="sc">\&quot;</span><span class="st">payload</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">rid</span><span class="sc">\&quot;</span><span class="st">:[</span><span class="sc">\&quot;</span><span class="st">VYrDwtG</span><span class="sc">\&quot;</span><span class="st">]},</span><span class="sc">\&quot;</span><span class="st">browser</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">address</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">::1</span><span class="sc">\&quot;</span><span class="st">,</span><span class="sc">\&quot;</span><span class="st">user-agent</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36</span><span class="sc">\&quot;</span><span class="st">}}&quot;</span></span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:46.955281Z&quot;</span><span class="op">,</span></span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Clicked Link&quot;</span><span class="op">,</span></span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;{</span><span class="sc">\&quot;</span><span class="st">payload</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">rid</span><span class="sc">\&quot;</span><span class="st">:[</span><span class="sc">\&quot;</span><span class="st">VYrDwtG</span><span class="sc">\&quot;</span><span class="st">]},</span><span class="sc">\&quot;</span><span class="st">browser</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">address</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">::1</span><span class="sc">\&quot;</span><span class="st">,</span><span class="sc">\&quot;</span><span class="st">user-agent</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36</span><span class="sc">\&quot;</span><span class="st">}}&quot;</span></span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;smtp&quot;</span><span class="op">:</span> {</span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;interface_type&quot;</span><span class="op">:</span> <span class="st">&quot;SMTP&quot;</span><span class="op">,</span></span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Sending Profile&quot;</span><span class="op">,</span></span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;host&quot;</span><span class="op">:</span> <span class="st">&quot;localhost:1025&quot;</span><span class="op">,</span></span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;from_address&quot;</span><span class="op">:</span> <span class="st">&quot;Test User </span><span class="sc">\u003c</span><span class="st">test@test.com</span><span class="sc">\u003e</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ignore_cert_errors&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;headers&quot;</span><span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-09-04T01:24:21.691924069Z&quot;</span></span>
+<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;url&quot;</span><span class="op">:</span> <span class="st">&quot;http://localhost&quot;</span></span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb7">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign not found&quot;</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if the specified campaign isn't found.</p>
+      <h2 id="create-campaign">Create Campaign</h2>
+      <p><strong>POST</strong>
+        <code>https://localhost:3333/api/campaigns/</code>
+      </p>
+      <p>
+        Creates and launches a new campaign.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>The campaign details. See the introduction above for the format of a campaign.</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>201</strong>
+      <div class="sourceCode" id="cb8">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Campaign&quot;</span><span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;created_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.48815Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;launch_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;send_by_date&quot;</span><span class="op">:</span> <span class="st">&quot;0001-01-01T00:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;completed_date&quot;</span><span class="op">:</span> <span class="st">&quot;0001-01-01T00:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;template&quot;</span><span class="op">:</span> {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Template&quot;</span><span class="op">,</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;subject&quot;</span><span class="op">:</span> <span class="st">&quot;Click here!&quot;</span><span class="op">,</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;text&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;</span><span class="sc">\u003c</span><span class="st">html</span><span class="sc">\u003e\n\u003c</span><span class="st">head</span><span class="sc">\u003e\n\t\u003c</span><span class="st">title</span><span class="sc">\u003e\u003c</span><span class="st">/title</span><span class="sc">\u003e\n\u003c</span><span class="st">/head</span><span class="sc">\u003e\n\u003c</span><span class="st">body</span><span class="sc">\u003e\n\u003c</span><span class="st">p</span><span class="sc">\u003e</span><span class="st">Click </span><span class="sc">\u003c</span><span class="st">a href=</span><span class="sc">\&quot;</span><span class="st">{{.URL}}</span><span class="sc">\&quot;\u003e</span><span class="st">here</span><span class="sc">\u003c</span><span class="st">/a</span><span class="sc">\u003e</span><span class="st">!</span><span class="sc">\u003c</span><span class="st">/p</span><span class="sc">\u003e\n</span><span class="st">{{.Tracker}}</span><span class="sc">\u003c</span><span class="st">/body</span><span class="sc">\u003e\n\u003c</span><span class="st">/html</span><span class="sc">\u003e\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:54:56.258392Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;attachments&quot;</span><span class="op">:</span> []</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;page&quot;</span><span class="op">:</span> {</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Landing Page&quot;</span><span class="op">,</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;</span><span class="sc">\u003c</span><span class="st">html</span><span class="sc">\u003e\u003c</span><span class="st">head</span><span class="sc">\u003e\n\t\u003c</span><span class="st">title</span><span class="sc">\u003e\u003c</span><span class="st">/title</span><span class="sc">\u003e\n\u003c</span><span class="st">/head</span><span class="sc">\u003e\n\u003c</span><span class="st">body</span><span class="sc">\u003e\n\u003c</span><span class="st">p</span><span class="sc">\u003e</span><span class="st">Landing page HTML</span><span class="sc">\u003c</span><span class="st">/p</span><span class="sc">\u003e\n\n\n\u003c</span><span class="st">/body</span><span class="sc">\u003e\u003c</span><span class="st">/html</span><span class="sc">\u003e</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;capture_credentials&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;capture_passwords&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;redirect_url&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:55:16.416396Z&quot;</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;In progress&quot;</span><span class="op">,</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;results&quot;</span><span class="op">:</span> [</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="st">&quot;hoqKYFn&quot;</span><span class="op">,</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ip&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;latitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;longitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;send_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;reported&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="st">&quot;VYrDwtG&quot;</span><span class="op">,</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;Clicked Link&quot;</span><span class="op">,</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ip&quot;</span><span class="op">:</span> <span class="st">&quot;::1&quot;</span><span class="op">,</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;latitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;longitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;send_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.548722Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;reported&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:46.955281Z&quot;</span><span class="op">,</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;timeline&quot;</span><span class="op">:</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;smtp&quot;</span><span class="op">:</span> {</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;interface_type&quot;</span><span class="op">:</span> <span class="st">&quot;SMTP&quot;</span><span class="op">,</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Sending Profile&quot;</span><span class="op">,</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;host&quot;</span><span class="op">:</span> <span class="st">&quot;localhost:1025&quot;</span><span class="op">,</span></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;from_address&quot;</span><span class="op">:</span> <span class="st">&quot;Test User </span><span class="sc">\u003c</span><span class="st">test@test.com</span><span class="sc">\u003e</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ignore_cert_errors&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;headers&quot;</span><span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-09-04T01:24:21.691924069Z&quot;</span></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;url&quot;</span><span class="op">:</span> <span class="st">&quot;http://localhost&quot;</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>
+        This method expects the campaign to be provided in JSON format. For
+        the various objects in a campaign, such as the template, landing page,
+        or sending profile, you need to provide the
+        <code>name</code> attribute. Here's an example of a JSON payload to
+        create a new campaign:
+      </p>
+      <div class="sourceCode" id="cb9">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;CC Example Campaign&quot;</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;template&quot;</span><span class="op">:</span>{<span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;Example Template&quot;</span>}<span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;url&quot;</span><span class="op">:</span><span class="st">&quot;http://localhost&quot;</span><span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;page&quot;</span><span class="op">:</span>{<span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;Example Landing Page&quot;</span>}<span class="op">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;smtp&quot;</span><span class="op">:</span>{<span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;Example Sending Profile&quot;</span>}<span class="op">,</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;launch_date&quot;</span><span class="op">:</span><span class="st">&quot;2018-10-08T16:20:00+00:00&quot;</span><span class="op">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;send_by_date&quot;</span><span class="op">:</span><span class="kw">null</span><span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;groups&quot;</span><span class="op">:</span>[{<span class="st">&quot;name&quot;</span><span class="op">:</span><span class="st">&quot;Example Group&quot;</span>}]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <h2 id="scheduling-campaign">Scheduling a Campaign</h2>
+      <p>
+        You can schedule a campaign to launch at a later time. To do this,
+        simply put the desired time you want the campaign to launch in the
+        <code>launch_date</code> attribute. Culsight - Phishing Simulation expects the date to be
+        provided in ISO8601 format.
+      </p>
+      <p>
+        Without setting a launch date, Culsight - Phishing Simulation launches the campaign
+        immediately.
+      </p>
+      <h2 id="spreading-out-emails">Spreading out Emails</h2>
+      <p>
+        By default, Culsight - Phishing Simulation sends all the emails in a campaign as quickly as
+        possible. Instead, you may wish to spread emails out over a period of
+        minutes, hours, days, or weeks. This is possible by setting the
+        <code>send_by_date</code> to an ISO8601 formatted datetime. It's
+        important to note that this must be after the
+        <code>launch_date</code>.
+      </p>
+      <h2 id="get-campaign-results">Get Campaign Results</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/campaigns/:id/results</code>
+      </p>
+      <p>
+        Gets the results for a campaign.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The campaign ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb10">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Campaign&quot;</span><span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;In progress&quot;</span><span class="op">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;results&quot;</span><span class="op">:</span> [</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="st">&quot;hoqKYFn&quot;</span><span class="op">,</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ip&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;latitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;longitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;send_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;reported&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Example&quot;</span><span class="op">,</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;User&quot;</span><span class="op">,</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="st">&quot;VYrDwtG&quot;</span><span class="op">,</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;Clicked Link&quot;</span><span class="op">,</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;ip&quot;</span><span class="op">:</span> <span class="st">&quot;::1&quot;</span><span class="op">,</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;latitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;longitude&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;send_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.548722Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;reported&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:46.955281Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;first_name&quot;</span><span class="op">:</span> <span class="st">&quot;Foo&quot;</span><span class="op">,</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;last_name&quot;</span><span class="op">:</span> <span class="st">&quot;Bar&quot;</span><span class="op">,</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;position&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;timeline&quot;</span><span class="op">:</span> [</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.49172Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign Created&quot;</span><span class="op">,</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="op">,</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.535158Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.548722Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Sent&quot;</span><span class="op">,</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:44.679743Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Email Opened&quot;</span><span class="op">,</span></span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;{</span><span class="sc">\&quot;</span><span class="st">payload</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">rid</span><span class="sc">\&quot;</span><span class="st">:[</span><span class="sc">\&quot;</span><span class="st">VYrDwtG</span><span class="sc">\&quot;</span><span class="st">]},</span><span class="sc">\&quot;</span><span class="st">browser</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">address</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">::1</span><span class="sc">\&quot;</span><span class="st">,</span><span class="sc">\&quot;</span><span class="st">user-agent</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36</span><span class="sc">\&quot;</span><span class="st">}}&quot;</span></span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;email&quot;</span><span class="op">:</span> <span class="st">&quot;foo@bar.com&quot;</span><span class="op">,</span></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;time&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:46.955281Z&quot;</span><span class="op">,</span></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Clicked Link&quot;</span><span class="op">,</span></span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;details&quot;</span><span class="op">:</span> <span class="st">&quot;{</span><span class="sc">\&quot;</span><span class="st">payload</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">rid</span><span class="sc">\&quot;</span><span class="st">:[</span><span class="sc">\&quot;</span><span class="st">VYrDwtG</span><span class="sc">\&quot;</span><span class="st">]},</span><span class="sc">\&quot;</span><span class="st">browser</span><span class="sc">\&quot;</span><span class="st">:{</span><span class="sc">\&quot;</span><span class="st">address</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">::1</span><span class="sc">\&quot;</span><span class="st">,</span><span class="sc">\&quot;</span><span class="st">user-agent</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36</span><span class="sc">\&quot;</span><span class="st">}}&quot;</span></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb11">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign not found&quot;</span><span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>
+        You may not always want the full campaign details, including the
+        template, landing page, etc. Instead, you may just want to poll the
+        campaign results for updates. This API endpoint only returns
+        information that's relevant to the campaign results.
+      </p>
+      <p>Returns a 404 error if the specified campaign isn't found.</p>
+      <h2 id="get-campaign-summary">Get Campaign Summary</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/campaigns/:id/summary</code>
+      </p>
+      <p>
+        Returns summary information about a
+        campaign. .html
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The campaign ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb12">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;created_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:29.48815Z&quot;</span><span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;launch_date&quot;</span><span class="op">:</span> <span class="st">&quot;2018-10-08T15:56:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;send_by_date&quot;</span><span class="op">:</span> <span class="st">&quot;0001-01-01T00:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;completed_date&quot;</span><span class="op">:</span> <span class="st">&quot;0001-01-01T00:00:00Z&quot;</span><span class="op">,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;status&quot;</span><span class="op">:</span> <span class="st">&quot;In progress&quot;</span><span class="op">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Campaign&quot;</span><span class="op">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;stats&quot;</span><span class="op">:</span> {</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;total&quot;</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;sent&quot;</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;opened&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;clicked&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;submitted_data&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;email_reported&quot;</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;error&quot;</span><span class="op">:</span> <span class="dv">0</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb13">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign not found&quot;</span><span class="op">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if the specified campaign isn't found.</p>
+      <p>
+        There may be cases where you aren't interested in the specific
+        results, but rather want high-level statistics, or a "summary", about
+        a campaign.
+      </p>
+      <p>
+        The response includes a <code>stats</code> object which has the
+        following format:
+      </p>
+      <pre class="text"><code>{
+  total            : int
+  sent             : int
+  opened           : int
+  clicked          : int
+  submitted_data   : int
+  email_reported   : int
+}</code></pre>
+      <h2 id="delete-campaign">Delete Campaign</h2>
+      <p>
+        <strong>DELETE</strong>
+        <code>https://localhost:3333/api/campaigns/:id</code>
+      </p>
+      <p>
+        Deletes a campaign by ID.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The campaign ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb15">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign deleted successfully!&quot;</span><span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb16">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign not found&quot;</span><span class="op">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if the specified campaign isn't found.</p>
+      <h2 id="complete-campaign">Complete Campaign</h2>
+      <p>
+        <strong>GET</strong>
+        <code>https://localhost:3333/api/campaigns/:id/complete</code>
+      <p>
+        Marks a campaign as complete.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The campaign ID</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb17">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Campaign completed successfully!&quot;</span><span class="op">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Culsight Phishing Simulator" />
+  <meta name="author" content="Viir Phuria (https://github.com/Viir-Phuria)" />
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <title>Sending Profile | API Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Left Sidebar -->
+  <div class="navbar-left">
+    <img src="images/Culsight.png" alt="Culsight Logo" height="50px" />
+    <h2>API Documentation</h2>
+    <ul class="nav-links-left">
+      <li><a href="introduction.html">Introduction</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="sending-profiles.html">Sending Profiles</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="landing-pages.html">Landing Pages</a></li>
+      <li><a href="users-and-groups.html">Users & Groups</a></li>
+      <li><a href="campaigns.html">Campaigns</a></li>
+      <li><a href="user-management.html">User Management</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-container">
+    <!-- Right Sidebar (dynamic per page) -->
+    <div class="navbar-right">
+      <ul class="nav-links-right">
+        <li><a href="#get-landing-pages">Get Landing Pages</a></li>
+        <li><a href="#get-landing-page">Get Landing Page</a></li>
+        <li><a href="#create-landing-pages">Create Landing Page</a></li>
+        <li><a href="#modify-landing-pages">Modify Landing Page</a></li>
+        <li><a href="#delete-landing-pages">Delete Landing Page</a></li>
+        <li><a href="#import-site">Import Site</a></li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+      <h1 id="landing-pages">Landing Pages</h1>
+      <p>
+        A "Landing Page" is the HTML content returned when targets click on
+        the links in Culsight - Phishing Simulation emails.
+      </p>
+      <p>Landing pages have the following structure:</p>
+      <pre class="text"><code>{
+  id                  : int64
+  name                : string
+  html                : string
+  capture_credentials : bool
+  capture_passwords   : bool
+  modified_date       : string(datetime)
+  redirect_url        : string
+}</code></pre>
+      <h2 id="get-landing-pages">Get Landing Pages</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/pages/</code>
+      </p>
+      <p>
+        Returns a list of landing pages.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200 OK</strong>
+      <div class="sourceCode" id="cb2">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[  </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Page&quot;</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;This is a test page&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;capture_credentials&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;capture_passwords&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;redirect_url&quot;</span><span class="op">:</span> <span class="st">&quot;http://example.com&quot;</span><span class="op">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2016-11-26T14:04:40.4130048-06:00&quot;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>]</span></code></pre>
+      </div>
+      <h2 id="get-landing-page">Get Landing Page</h2>
+      <p><strong>GET</strong>
+        <code>https://localhost:3333/api/pages/:id</code>
+      </p>
+      <p>
+        Returns a landing page given an ID.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The landing page ID</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb3">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Page&quot;</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;This is a test page&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;capture_credentials&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;capture_passwords&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;redirect_url&quot;</span><span class="op">:</span> <span class="st">&quot;http://example.com&quot;</span><span class="op">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2016-11-26T14:04:40.4130048-06:00&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb4">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Page not found&quot;</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if the specified landing page isn't found.</p>
+      <h2 id="create-landing-pages">Create Landing Page</h2>
+      <p><strong>POST</strong>
+        <code>https://localhost:3333/api/pages/</code>
+      </p>
+      <p>
+        Creates a landing page.
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>The JSON representation of the landing page to be created</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>201</strong>
+      <div class="sourceCode" id="cb5">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Page&quot;</span><span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;This is a test page&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;capture_credentials&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;capture_passwords&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;redirect_url&quot;</span><span class="op">:</span> <span class="st">&quot;http://example.com&quot;</span><span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2016-11-26T14:04:40.4130048-06:00&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>
+        This method expects the landing page to be provided in JSON format.
+        You must provide a landing page <code>name</code> and the
+        <code>html</code> for the landing page.
+      </p>
+      <p class="hint"><strong>Importing a Site</strong><br><br>
+        Let Culsight - Phishing Simulation do the hard work for you by importing a site. By using the
+        <a href="landing-pages.html#import-site">Import Site</a> endpoint, you
+        can simply give Culsight - Phishing Simulation a URL and have the site fetched for you and
+        returned in a format that can be used with this method. {% endhint %}
+      </p>
+      <h4 id="capturing-credentials">Capturing Credentials</h4>
+      <p>
+        Capturing credentials is a powerful feature of Culsight - Phishing Simulation. By setting
+        certain flags, you have the ability to capture all user input, or just
+        non-password input.
+      </p>
+      <p>
+        To capture credentials, set the <code>capture_credentials</code>
+        attribute. If you want to capture passwords as well, set the
+        <code>capture_passwords</code> attribute.
+      </p>
+      <p>
+        By default, Culsight - Phishing Simulation will not capture passwords, as they are stored in
+        plaintext.
+      </p>
+      <p>
+        Culsight - Phishing Simulation also provides the ability to redirect users to a URL after
+        they submit credentials. This is controlled by setting the
+        <code>redirect_url</code> attribute.
+      </p>
+      <h2 id="modify-landing-pages">Modify Landing Page</h2>
+      <p><strong>PUT</strong>
+        <code>https://localhost:3333/api/pages/:id</code>
+      </p>
+      <p>
+        Modifies an existing landing page.
+      </p>
+
+      <p>
+        Returns a landing page given an ID.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The ID of the landing page to modify</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>The JSON representation of the landing page to be modified</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb6">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;id&quot;</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;Example Page&quot;</span><span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;This is a test page&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;capture_credentials&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;capture_passwords&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;redirect_url&quot;</span><span class="op">:</span> <span class="st">&quot;http://example.com&quot;</span><span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;modified_date&quot;</span><span class="op">:</span> <span class="st">&quot;2016-11-26T14:04:40.4130048-06:00&quot;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb7">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Page not found&quot;</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if the specified landing page isn't found.</p>
+      <p>
+        This method expects the landing page to be provided in JSON format.
+        You must provide a full landing page, not just the fields you want to
+        update.
+      </p>
+      <p>
+        This method returns the JSON representation of the landing page that
+        was modified.
+      </p>
+      <h2 id="delete-landing-pages">Delete Landing Page</h2>
+      <p><strong>DELETE</strong>
+        <code>https://localhost:3333/api/pages/:id</code>
+      <p>
+        Deletes a landing page.
+      </p>
+      <h3>Path Parameters</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The template ID</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb8">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Page Deleted Successfully&quot;</span><span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <strong>404</strong>
+      <div class="sourceCode" id="cb9">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;message&quot;</span><span class="op">:</span> <span class="st">&quot;Page not found&quot;</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;success&quot;</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>Returns a 404 error if the specified landing page isn't found.</p>
+      <p>
+        This method returns a status message indicating the landing page was
+        deleted successfully.
+      </p>
+      <h2 id="import-site">Import Site</h2>
+      <p><strong>POST</strong>
+        <code>https://localhost:3333/api/pages/import</code>
+      <p>
+        Fetches a URL to be later imported as a landing page
+      </p>
+      <h3>Headers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authorization</td>
+            <td>string</td>
+            <td>A valid API key</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Payload</td>
+            <td>object</td>
+            <td>Whether or not to create a
+              <base> tag in the resulting HTML to resolve static references (recommended: false)
+            </td>
+          </tr>
+          <tr>
+            <td>url</td>
+            <td>string</td>
+            <td>The URL to fetch</td>
+          </tr>
+        </tbody>
+      </table>
+      <strong>200</strong>
+      <div class="sourceCode" id="cb10">
+        <pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;html&quot;</span><span class="op">:</span> <span class="st">&quot;&lt;html&gt;&lt;head&gt;...&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre>
+      </div>
+      <p>
+        This endpoint simply fetches and returns the HTML from a provided URL.
+        If <code>include_resources</code> is <code>false</code> (recommended),
+        a <code>&lt;base&gt;</code> tag is added so that relative links in the
+        HTML resolve from the original URL.
+      </p>
+      <p>
+        Additionally, if the HTML contains form elements, this endpoint adds
+        another input, <code>__original_url</code>, that points to the
+        original URL. This makes it possible to replay captured credentials
+        later.
+      </p>
+      <p class="hint">
+        <strong>Note:</strong> This API endpoint
+        doesn't actually create a new landing page. Instead, you can use the
+        HTML returned from this endpoint as an input to the
+        <a href="landing-pages.html#create-landing-page">Create Landing Page</a>
+        method. {% endhint %}
+      </p>
+    </div>
+  </div>
+</body>
+
+</html>
